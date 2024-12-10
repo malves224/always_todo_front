@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import UserService from '@/services/userService';
 import Swal from 'sweetalert2';
 
@@ -8,6 +8,7 @@ const title = ref('');
 const descritpion = ref('');
 const status = ref('pending');
 const userService = new UserService();
+const tasks = ref([]);
 
 const handleSave = async () => {
   try {
@@ -17,6 +18,7 @@ const handleSave = async () => {
       status: status.value,
     });
     modalCreateTask.value = false;
+    fetchTasks();
   } catch (error) {
     Swal.fire({
       icon: 'error',
@@ -25,6 +27,15 @@ const handleSave = async () => {
     });
   }
 }
+
+const fetchTasks = async () => {
+  const response = await userService.getTasks();
+  tasks.value = response.data;
+}
+
+onBeforeMount(() => {
+  fetchTasks();
+});
 
 </script>
 <template>
@@ -43,16 +54,16 @@ const handleSave = async () => {
           </tr>
         </thead>
         <tbody>
-            <tr>
-            <td class="py-2 px-4 border-b border-gray-300 text-center">Sample Task</td>
-            <td class="py-2 px-4 border-b border-gray-300 text-center">Pending</td>
-            <td class="py-2 px-4 border-b border-gray-300">
-              <div class="flex justify-center">
-              <button class="bg-blue-500 text-white px-2 py-1 rounded">Editar</button>
-              <button class="bg-green-500 text-white px-2 py-1 rounded ml-2">Concluir</button>
-              <button class="bg-red-500 text-white px-2 py-1 rounded ml-2">Excluir</button>
-              </div>
-            </td>
+            <tr v-for="task in tasks" :key="task.id">
+              <td class="py-2 px-4 border-b border-gray-300 text-center">{{ task.title }}</td>
+              <td class="py-2 px-4 border-b border-gray-300 text-center">{{ task.status }}</td>
+              <td class="py-2 px-4 border-b border-gray-300">
+                <div class="flex justify-center">
+                <button class="bg-blue-500 text-white px-2 py-1 rounded">Editar</button>
+                <button class="bg-green-500 text-white px-2 py-1 rounded ml-2">Concluir</button>
+                <button class="bg-red-500 text-white px-2 py-1 rounded ml-2">Excluir</button>
+                </div>
+              </td>
             </tr>
         </tbody>
       </table>
