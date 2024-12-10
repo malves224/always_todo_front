@@ -5,7 +5,7 @@ class User extends HttpService {
     super();
   }
 
-  async login({ email, password }) {
+  async login(email, password) {
     return this.client.post("/login", { email, password });
   }
 
