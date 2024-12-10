@@ -12,6 +12,10 @@ class User extends HttpService {
   async create(params) {
     return this.client.post("/users", params);
   }
+
+  async createTask(params) {
+    return this.client.post("/tasks", params);
+  }
  }
 
 export default User;
