@@ -14,6 +14,19 @@ const fetchTasks = async () => {
   tasks.value = response.data;
 }
 
+const destroyTask = async (id) => {
+  try {
+    await userService.destroyTask(id);
+    fetchTasks();
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: error.response.data.errors[0],
+    });
+  }
+}
+
 onBeforeMount(() => {
   fetchTasks();
 });
@@ -42,7 +55,7 @@ onBeforeMount(() => {
                 <div class="flex justify-center">
                 <button class="bg-blue-500 text-white px-2 py-1 rounded">Editar</button>
                 <button class="bg-green-500 text-white px-2 py-1 rounded ml-2">Concluir</button>
-                <button class="bg-red-500 text-white px-2 py-1 rounded ml-2">Excluir</button>
+                <button @click="destroyTask(task.id)" class="bg-red-500 text-white px-2 py-1 rounded ml-2">Excluir</button>
                 </div>
               </td>
             </tr>

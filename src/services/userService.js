@@ -20,6 +20,10 @@ class User extends HttpService {
   async getTasks() {
     return this.client.get("/tasks");
   }
+
+  async destroyTask(id) {
+    return this.client.delete(`/tasks/${id}`);
+  }
  }
 
 export default User;
