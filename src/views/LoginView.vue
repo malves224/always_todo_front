@@ -14,7 +14,7 @@ const userService = new UserService();
 const handleSubmitLogin = async () => {
   try {
     const response = await userService.login(email.value, password.value);
-    new localStorage('customer').set({'token': response.data.token});
+    new localStorage('user').set({'token': response.data.token});
     window.location.href = '/tasks';
   } catch (error) {
     Swal.fire({
