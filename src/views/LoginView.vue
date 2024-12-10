@@ -1,13 +1,23 @@
 <script setup>
 import { ref } from 'vue';
 import UserService from '@/services/userService';
+import Swal from 'sweetalert2';
 
 const email = ref('');
 const password = ref('');
+const signUp = ref(false);
 const userService = new UserService();
 
-const handleSubmit = () => {
-  userService.login(email.value, password.value);
+const handleSubmit = async () => {
+  try {
+    await userService.login(email.value, password.value);
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: error.response.data.errors[0],
+    });
+  }
 };
 </script>
 
@@ -23,7 +33,6 @@ const handleSubmit = () => {
             id="email"
             v-model="email"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            required
           />
         </div>
         <div class="mb-6">
@@ -33,7 +42,6 @@ const handleSubmit = () => {
             id="password"
             v-model="password"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            required
           />
         </div>
         <button
