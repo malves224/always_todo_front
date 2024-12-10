@@ -1,29 +1,9 @@
-# always_todo_front
+# Always TODO
+Always TODO é um aplicativo de gerenciamento de tarefas que permite aos usuários criar, gerenciar e acompanhar suas listas de afazeres. O aplicativo inclui autenticação de usuários para garantir que os dados de cada usuário estejam seguros e privados. Além disso, possui validações de entrada para manter a integridade dos dados e proporcionar uma experiência de usuário suave.
 
-This template should help get you started developing with Vue 3 in Vite.
+## Interface
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+![Login Page](public/login.png)
+![Register Page](public/cadastro.png)
+![Task List](public/tasks.png)
+![Task Details](public/criar.png)
