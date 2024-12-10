@@ -14,6 +14,11 @@ const fetchTasks = async () => {
   tasks.value = response.data;
 }
 
+const concludedTask = async (id) => {
+  const response = await userService.updateTask(id, { status: 'done' });
+  fetchTasks();
+}
+
 const destroyTask = async (id) => {
   try {
     await userService.destroyTask(id);
@@ -54,7 +59,7 @@ onBeforeMount(() => {
               <td class="py-2 px-4 border-b border-gray-300">
                 <div class="flex justify-center">
                 <button class="bg-blue-500 text-white px-2 py-1 rounded">Editar</button>
-                <button class="bg-green-500 text-white px-2 py-1 rounded ml-2">Concluir</button>
+                <button @click="concludedTask(task.id)" class="bg-green-500 text-white px-2 py-1 rounded ml-2">Concluir</button>
                 <button @click="destroyTask(task.id)" class="bg-red-500 text-white px-2 py-1 rounded ml-2">Excluir</button>
                 </div>
               </td>

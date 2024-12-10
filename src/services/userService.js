@@ -24,6 +24,10 @@ class User extends HttpService {
   async destroyTask(id) {
     return this.client.delete(`/tasks/${id}`);
   }
+
+  async updateTask(id, params) {
+    return this.client.put(`/tasks/${id}`, params);
+  }
  }
 
 export default User;
