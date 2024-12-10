@@ -1,5 +1,5 @@
 <script setup>
-  import { defineProps, ref, watch, defineEmits } from 'vue';
+  import { defineProps, ref, watch, defineEmits, onMounted } from 'vue';
   import Swal from 'sweetalert2';
   import UserService from '@/services/userService';
 
@@ -9,8 +9,8 @@
       type: Boolean,
       required: true
     },
-    id: {
-      type: Number
+    taskEdit: {
+      type: Object,
     }
   });
 
@@ -21,25 +21,33 @@
   });
 
   const title = ref('');
-  const descritpion = ref('');
+  const description = ref('');
   const status = ref('pending');
   const emit = defineEmits(['close', 'saved']);
   const userService = new UserService();
+
+  const clearState = () => {
+    title.value = '';
+    description.value = '';
+    status.value = 'pending';
+  }
 
   const triggerClose = () => {
     emit('close');
   }
 
   const handleSave = async () => {
+    const payload = {
+      title: title.value,
+      description: description.value,
+      status: status.value,
+    }
     try {
-      await userService.createTask({
-        title: title.value,
-        description: descritpion.value,
-        status: status.value,
-      });
+      props.taskEdit 
+        ? await userService.updateTask(props.taskEdit.id, payload) 
+        : await userService.createTask(payload);
       triggerClose();
       emit('saved');
-      fetchTasks();
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -47,8 +55,16 @@
         text: error.response.data.errors[0],
       });
     }
+    clearState();
   }
 
+  onMounted(() => {
+    if(props.taskEdit) {
+      title.value = props.taskEdit.title;
+      description.value = props.taskEdit.description;
+      status.value = props.taskEdit.status;
+    }
+  })
 </script>
 <template>
   <div v-if="modalCreateTask" class="fixed z-10 inset-0 overflow-y-auto">
@@ -66,9 +82,9 @@
                 <input v-model="title" type="text" placeholder="Título da Task" class="w-full px-3 py-2 border border-gray-300 rounded-md" />
               </div>
               <textarea v-model="description" placeholder="Descrição da Task" class="w-full px-3 py-2 border border-gray-300 rounded-md mt-2"></textarea>
-              <select default="pending" class="w-full px-3 py-2 border border-gray-300 rounded-md mt-2">
+              <select v-model="status" default="pending" class="w-full px-3 py-2 border border-gray-300 rounded-md mt-2">
                 <option value="pending">Pendente</option>
-                <option value="completed">Concluído</option>
+                <option value="done">Concluído</option>
               </select>
             </div>
           </div>

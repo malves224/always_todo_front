@@ -7,6 +7,7 @@ import TaskAction from '@/components/TaskAction.vue';
 const modalCreateTask = ref(false);
 const userService = new UserService();
 const tasks = ref([]);
+const taskEdit = ref(null);
 
 
 const fetchTasks = async () => {
@@ -30,6 +31,16 @@ const destroyTask = async (id) => {
       text: error.response.data.errors[0],
     });
   }
+}
+
+const openModalEditTask = (id) => {
+  modalCreateTask.value = true;
+  taskEdit.value = tasks.value.find(task => task.id === id);
+}
+
+const handleClose = () => {
+  modalCreateTask.value = false;
+  taskEdit.value = null;
 }
 
 onBeforeMount(() => {
@@ -58,7 +69,7 @@ onBeforeMount(() => {
               <td class="py-2 px-4 border-b border-gray-300 text-center">{{ task.status }}</td>
               <td class="py-2 px-4 border-b border-gray-300">
                 <div class="flex justify-center">
-                <button class="bg-blue-500 text-white px-2 py-1 rounded">Editar</button>
+                <button @click="openModalEditTask(task.id)" class="bg-blue-500 text-white px-2 py-1 rounded">Editar</button>
                 <button @click="concludedTask(task.id)" class="bg-green-500 text-white px-2 py-1 rounded ml-2">Concluir</button>
                 <button @click="destroyTask(task.id)" class="bg-red-500 text-white px-2 py-1 rounded ml-2">Excluir</button>
                 </div>
@@ -67,7 +78,13 @@ onBeforeMount(() => {
         </tbody>
       </table>
     </div>
-    <TaskAction @saved="fetchTasks" :modalOpen="modalCreateTask" @close="modalCreateTask = false"  />
+    <TaskAction
+      v-if="modalCreateTask"
+      @saved="fetchTasks" 
+      @close="handleClose"
+      :modalOpen="modalCreateTask" 
+      :taskEdit="taskEdit"
+      />
   </div>
 </template>
 <style>
