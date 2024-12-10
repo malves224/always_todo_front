@@ -12,6 +12,14 @@ const signUp = ref(false);
 const userService = new UserService();
 
 const handleSubmitLogin = async () => {
+  if(!email.value || !password.value) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'E-mail e senha são obrigatórios',
+    });
+    return;
+  }
   try {
     const response = await userService.login(email.value, password.value);
     new localStorage('user').set({'token': response.data.token});
